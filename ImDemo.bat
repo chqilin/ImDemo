@@ -1,0 +1,1 @@
+Tools\Premake\premake5.exe --file=.\ImDemo.lua vs2019
