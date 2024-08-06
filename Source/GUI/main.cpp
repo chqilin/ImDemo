@@ -491,7 +491,8 @@ int WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LP
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-    app_init();
+    ImApp app;
+    app.init();
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -529,7 +530,7 @@ int WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LP
 #endif
         if (fb_width > 0 && fb_height > 0)
         {
-            app_tick();
+            app.tick();
         }
 
 
@@ -583,7 +584,7 @@ int WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LP
         }
     }
 
-    app_quit();
+    app.quit();
 
     // Cleanup
     err = vkDeviceWaitIdle(g_Device);

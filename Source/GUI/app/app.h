@@ -1,5 +1,11 @@
 #pragma once
 
-void app_init();
-void app_quit();
-void app_tick();
+struct ImApp
+{
+	void init();
+	void quit();
+	void tick();
+
+	void menu();
+	void content();
+};

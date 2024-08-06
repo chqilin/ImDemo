@@ -61,15 +61,13 @@ namespace string_utils
 }
 
 
-bool open_file_dialog(std::string& select_file_path)
-{
+bool open_file_dialog(std::string& select_file_path) {
 	IFileDialog* pfd = NULL;
 	auto hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pfd));
 	DWORD flags;
 	hr = pfd->GetOptions(&flags);
 	hr = pfd->SetOptions(flags | FOS_FORCEFILESYSTEM | FOS_ALLOWMULTISELECT);
-	COMDLG_FILTERSPEC file_types[] =
-	{
+	COMDLG_FILTERSPEC file_types[] = {
 		{ L"NGR Niagara Performance File", L"*.niagaraperf" },
 	};
 	hr = pfd->SetFileTypes(ARRAYSIZE(file_types), file_types);
@@ -80,23 +78,18 @@ bool open_file_dialog(std::string& select_file_path)
 	IShellItem* item = nullptr;
 	hr = pfd->GetResult(&item);
 
-	if (item == nullptr)
-	{
+	if (item == nullptr) {
 		return false;
 	}
 
-	struct CoTaskMemFreeScope
-	{
+	struct CoTaskMemFreeScope {
 		CoTaskMemFreeScope(LPVOID p)
-			:ptr(p)
-		{
+			:ptr(p) {
 
 		}
 
-		~CoTaskMemFreeScope()
-		{
-			if (ptr)
-			{
+		~CoTaskMemFreeScope() {
+			if (ptr) {
 				CoTaskMemFree(ptr);
 			}
 		}
@@ -108,15 +101,13 @@ bool open_file_dialog(std::string& select_file_path)
 	CoTaskMemFreeScope _(wpath);
 	hr = item->GetDisplayName(SIGDN_DESKTOPABSOLUTEPARSING, &wpath);
 
-	if (wpath == NULL)
-	{
+	if (wpath == NULL) {
 		return false;
 	}
 
 	DWORD dwMinSize = 0;
 	dwMinSize = WideCharToMultiByte(CP_OEMCP, NULL, wpath, -1, NULL, 0, NULL, FALSE);
-	if (dwMinSize == 0)
-	{
+	if (dwMinSize == 0) {
 		return false;
 	}
 
@@ -126,13 +117,84 @@ bool open_file_dialog(std::string& select_file_path)
 	return true;
 }
 
-void app_init()
-{
+
+void ImApp::init() {
 
 }
 
-void app_quit()
-{}
+void ImApp::quit() {
 
-void app_tick()
-{}
+}
+
+void ImApp::tick() {
+	this->menu();
+	this->content();
+}
+
+void ImApp::menu() {
+	if (ImGui::BeginMainMenuBar()) {
+		if (ImGui::BeginMenu("File")) {
+			if (ImGui::MenuItem("Open File...")) {
+				std::string select_file_path;
+				if (open_file_dialog(select_file_path)) {
+					// allocate_visualization_page(select_file_path);
+				}
+
+			}
+
+			if (ImGui::MenuItem("Open Folder...")) {
+
+			}
+
+			if (ImGui::BeginMenu("Open Recent")) {
+				ImGui::MenuItem("fish_hat.c");
+				ImGui::MenuItem("fish_hat.inl");
+				ImGui::MenuItem("fish_hat.h");
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Tools")) {
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Window")) {
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Help")) {
+			if (ImGui::MenuItem("About")) {
+
+			}
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndMainMenuBar();
+	}
+}
+
+void ImApp::content()
+{
+	ImGuiIO& io = ImGui::GetIO();
+	static const char* content_window_name = "##niagara_perf_viewer_main_window";
+	static const ImGuiWindowFlags content_window_flags =
+		ImGuiWindowFlags_NoTitleBar |
+		ImGuiWindowFlags_NoCollapse |
+		ImGuiWindowFlags_NoResize |
+		ImGuiWindowFlags_NoMove |
+		ImGuiWindowFlags_NoBringToFrontOnFocus |
+		ImGuiWindowFlags_NoNavFocus;
+	ImGui::SetNextWindowPos(ImVec2(0, ImGui::GetFrameHeight()));
+	ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x, io.DisplaySize.y - ImGui::GetFrameHeight()));
+	if (ImGui::Begin(content_window_name, nullptr, content_window_flags))
+	{
+
+
+		ImGui::End();
+	}
+}
+
