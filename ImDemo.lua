@@ -15,7 +15,7 @@ workspace "ImDemo"
     objdir ("./Build/Obj/%{prj.name}/%{cfg.buildcfg}/")
     startproject "ImDemo"
 
-    cppdialect "C++17"
+    cppdialect "C++20"
 
 project "ImDemo"
     kind "WindowedApp"
